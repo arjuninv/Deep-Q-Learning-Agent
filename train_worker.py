@@ -18,7 +18,6 @@ def connect():
 def update(properties=[]):
     requests.get(MASTER_ENDPOINT + f"/master/update?id={id}" + "&".join(properties[0] + "=" + properties[1]))
         
-env = rover_lander_1()
 
 class Agent:
     def __init__(self):
@@ -39,21 +38,23 @@ class Agent:
     def qs(self):
         pass
     
+env = rover_lander_1()
 agent = Agent()
     
 for episode in tqdm(range(0, MAX_EPISODES), ascii=True, unit='episodes'):
-    episode_reward = 0
-    step = 1
-    current_state = env.reset()
-    done = False
-    while not done:
-        if np.random.random() > agent.epsilon:
-            action = np.argmax(agent.get_qs(current_state))
-        else:
-            action = env.random_action_sample()
+    env.
+    # episode_reward = 0
+    # step = 1
+    # current_state = env.reset()
+    # done = False
+    # while not done:
+    #     if np.random.random() > agent.epsilon:
+    #         action = np.argmax(agent.get_qs(current_state))
+    #     else:
+    #         action = env.random_action_sample()
             
-    new_state, reward, done = env.step(action)
-    episode_reward += reward
+    # new_state, reward, done = env.step(action)
+    # episode_reward += reward
     
-    if SHOW_PREVIEW and not episode % AGGREGATE_STATS_EVERY:
-            env.render()
+    # if SHOW_PREVIEW and not episode % AGGREGATE_STATS_EVERY:
+    #         env.render()

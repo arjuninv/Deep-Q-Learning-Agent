@@ -1,4 +1,8 @@
-from core import Env
+try:
+    from envs.core import Env
+except:
+    from core import Env
+
 import pygame
 import math
 import random
