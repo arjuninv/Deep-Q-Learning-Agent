@@ -1,5 +1,6 @@
 import numpy as np
 import requests
+import datetime
 from collections import deque
 from envs.rover_lander_1 import rover_lander_1
 import tqdm
@@ -20,6 +21,10 @@ def connect():
     
 def update(properties=[]):
     requests.get(MASTER_ENDPOINT + f"/master/update?id={id}" + "&".join(properties[0] + "=" + properties[1]))
+    
+def send_model(model_path):
+    files = {'model': open(model_path,'rb')}
+    r = requests.post(MASTER_ENDPOINT + f"/master/send_model?id={id}", files=files)
         
 class customCallback(tf.keras.callbacks.Callback): 
     def on_epoch_end(self, epoch, logs={}): 
@@ -40,6 +45,11 @@ class Agent:
     
     def create_model(self):
         pass
+    
+    def save_model(self, local_only=True):
+        self.model.save(f"saved_model/{WORKER_NAME}.h5")
+        if not local_only:
+            send_model(f"saved_model/{WORKER_NAME}.h5")
     
     def update_replay_memory(self):
         pass

@@ -3,3 +3,6 @@ envs/__pycache__/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# TensorBoard log files
+logs/

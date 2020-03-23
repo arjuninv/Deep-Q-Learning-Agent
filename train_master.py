@@ -6,31 +6,41 @@ import os
 import time
 import tensorflow as tf
 
+
+MODEL_DIR = "saved_models"
+CWD = os.getcwd()
 app = Flask(__name__)
 
 workers = []
 
-logger_dict = {}
 class Logger(object):
+    logger_dict = {}
     def __init__(self, worker_name):
-        logger_dict[worker_name] = self
-        self.writer = tf.summary.FileWriter(f"/logs/{worker_name}")
+        Logger.logger_dict[worker_name] = self
+        logdir = os.path.join(CWD, f"logs/{worker_name}/scalars/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        self.writer = tf.summary.create_file_writer(logdir + "/metrics")
         self.step_rec = {}
         
-    @static
-    def get_logger(self, worker_name):
-        return logger_dict["worker_name"]
+    @staticmethod
+    def get_logger(worker_name):
+        if worker_name in Logger.logger_dict:
+            return Logger.logger_dict[worker_name]
+        else:
+            return Logger(worker_name)
 
     def log_scalar(self, tag, value):
-        summary = tf.Summary(value=[tf.Summary.Value(tag=tag, simple_value=value)])
         self.step_rec[tag] = self.step_rec.get(tag, 0) + 1
-        self.writer.add_summary(summary, self.step_rec)
+        self.writer.set_as_default()
+        tf.summary.scalar(tag, data=float(value), step=self.step_rec[tag])
+        self.writer.flush()
+        # summary = tf.Summary(value=[tf.Summary.Value(tag=tag, simple_value=value)])
+        # self.writer.add_summary(summary, self.step_rec)
 
 
 @app.route('/master/connect')
 def connect():
     global workers
-    worker = {k: v.replace("curr_time", datetime.datetime.now()) for k, v in request.args.items()}
+    worker = {k: v.replace("curr_time", str(datetime.datetime.now())) for k, v in request.args.items()}
     worker["connected_at"] = datetime.datetime.now()
     worker["updated_at"] = datetime.datetime.now()
     workers.append(worker)
@@ -41,14 +51,27 @@ def connect():
 def update():
     global workers
     id = request.args['id']
-    worker_name = workers[id]["worker_name"]
+    worker_name = workers[int(id)]["worker_name"]
     for arg in request.args.keys():
         if arg != 'id':
-            temp = request.args[arg].replace("curr_time", datetime.datetime.now())
+            temp = request.args[arg].replace("curr_time", str(datetime.datetime.now()))
             workers[int(id)][arg] = temp
             
             if arg in ["acc", "loss", "mse"]:
                 Logger.get_logger(worker_name).log_scalar(arg, request.args[arg])
+    return id
+                
+@app.route('/master/send_file')
+def send_file():
+    global workers
+    id = request.args['id']
+    worker_name = workers[int(id)]["worker_name"]
+
+    if request.method == 'POST':
+        if 'model' in request.files:
+            file = request.files['model']
+            file.save(os.path.join(MODEL_DIR, worker_name, file.filename))
+    return id
                 
                 
     workers[int(id)]["updated_at"] = datetime.datetime.now()
