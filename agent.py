@@ -1,5 +1,5 @@
 import numpy as np
-
+from collections import deque
 from envs.rover_lander_1 import rover_lander_1
 
 MAX_EPISODES = 5_000
@@ -7,14 +7,16 @@ MAX_EPISODES = 5_000
 SHOW_PREVIEW = True
 AGGREGATE_STATS_EVERY = 10
 
-epsilon = 0.98
 
 
 env = rover_lander_1()
 
 class Agent:
     def __init__(self):
-        pass
+        self.epsilon = 1.0
+        self.epsilon_decay = .996
+        self.memory = deque(maxlen=1000000)
+        self.model = self.build_model()
     
     def create_model(self):
         pass
