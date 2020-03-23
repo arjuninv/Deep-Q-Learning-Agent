@@ -19,6 +19,8 @@ MAX_EPISODES = 5_000
 SHOW_PREVIEW = True
 AGGREGATE_STATS_EVERY = 10
 REPLAY_MEMORY_SIZE = 1000000
+SAVE_MODEL_EVERY = 100
+SAVE_MODEL_LOCAL_EVERY = 10
 
 TRAIN_PARAMS = {'learning_rate': 0.001}
 
@@ -114,15 +116,24 @@ for episode in tqdm(range(0, MAX_EPISODES), ascii=True, unit='episodes'):
             
         if SHOW_PREVIEW and not episode % AGGREGATE_STATS_EVERY:
                 env.render()
+        
 
         new_state, reward, done = env.step(action)
         episode_reward += reward
         
         agent.update_replay_memory(current_state, action, reward, new_state, done)
         current_state = new_state
-        
         agent.replay()
+        step = step + 1
         
+            
+        .append(episode_reward)
+    update(("last_ep_score", episode_reward), 
+           ("avg_ep_score", sum(episode_rewards) / len(episode_rewards)),
+           ("num_step", step))
     
-    episode_rewards.append(episode_reward)
-    update(("last_ep_score", episode_reward), ("avg_ep_score", sum(episode_rewards) / len(episode_rewards)))
+    if episode % SAVE_MODEL_EVERY:
+        agent.save_model(local=False)
+        
+    if episode % SAVE_MODEL_LOCAL_EVERY:
+        agent.save_model(local=True)
