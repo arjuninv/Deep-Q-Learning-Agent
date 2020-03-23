@@ -4,11 +4,14 @@ from collections import deque
 from envs.rover_lander_1 import rover_lander_1
 import tqdm
 
+
 MASTER_ENDPOINT = "localhost:5000"
 WORKER_NAME = ""
 MAX_EPISODES = 5_000
 SHOW_PREVIEW = True
 AGGREGATE_STATS_EVERY = 10
+
+TRAIN_PARAMS = {}
 
 id = None
 
@@ -18,7 +21,16 @@ def connect():
 def update(properties=[]):
     requests.get(MASTER_ENDPOINT + f"/master/update?id={id}" + "&".join(properties[0] + "=" + properties[1]))
         
-
+class customCallback(tf.keras.callbacks.Callback): 
+    def on_epoch_end(self, epoch, logs={}): 
+        update(("acc", logs.get('acc')),
+                ("loss", logs.get('loss')),
+                ("mse", logs.get('mse')),
+                ("epocs", epoch))
+                
+    def on_train_end(self, logs=None):
+        update(("last_trained", "curr_time"))
+        
 class Agent:
     def __init__(self):
         self.epsilon = 1.0
@@ -42,7 +54,6 @@ env = rover_lander_1()
 agent = Agent()
     
 for episode in tqdm(range(0, MAX_EPISODES), ascii=True, unit='episodes'):
-    env.
     # episode_reward = 0
     # step = 1
     # current_state = env.reset()
