@@ -16,7 +16,7 @@ class rover:
     
     def draw_self(self):
         self.rover = pygame.Rect(int(self.x),int(self.y), 10, 50)
-        pygame.draw.rect(self.screen, (255,255,255), self.rover, 1)
+        pygame.draw.rect(self.screen, (255,255,255), self.rover, 0)
 
 class platform:
     def __init__(self, screen):
@@ -27,7 +27,7 @@ class platform:
     
     def draw_self(self):
         self.platform = pygame.Rect(int(self.x), int(self.y),30, 10) 
-        pygame.draw.rect(self.screen, (255,255,255), self.platform, 1)
+        pygame.draw.rect(self.screen, (0, 217, 255), self.platform, 0)
 
 
 class rover_lander_1(Env):
