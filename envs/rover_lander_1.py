@@ -7,7 +7,6 @@ import pygame
 import math
 import random
 
-pygame.init()
 
 class rover:
     def __init__(self, screen):
@@ -22,6 +21,7 @@ class rover:
 class platform:
     def __init__(self, screen):
         self.screen = screen
+        pygame.init()
         self.x = random.randrange(0,370, step=10)
         self.y = 290
     
