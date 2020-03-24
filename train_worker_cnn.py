@@ -74,9 +74,9 @@ class Agent:
         self.model = self.create_model()
         self.model_v = 0
     def create_model(self):
-        model = Sequential([layers.Conv2D(64, kernal_size=3, input_dim=(rover_lander_1.observation_space[0], rover_lander_1.observation_space[1], 3), activation=activations.relu),
+        model = Sequential([layers.Conv2D(64, kernel_size=3, input_shape=(rover_lander_1.observation_space[0], rover_lander_1.observation_space[1], 3), activation=activations.relu),
                             layers.MaxPooling2D(pool_size=(2, 2)),
-                            layers.Conv2D(64, kernal_size=3, activation=activations.relu),
+                            layers.Conv2D(32, kernel_size=3, activation=activations.relu),
                             layers.MaxPooling2D(pool_size=(2, 2)),
                             layers.Flatten(),
                             layers.Dense(120, activation=activations.relu),
@@ -106,12 +106,13 @@ class Agent:
         rewards = np.array([i[2] for i in minibatch])
         next_states = np.array([i[3] for i in minibatch])
         dones = np.array([i[4] for i in minibatch])
-        
-        # states = np.squeeze(states, axis=0)
-        # next_states = np.squeeze(next_states, axis=0)
 
-        states = states.reshape(states.shape[0], np.prod(states.shape[1:]))/255
-        next_states = next_states.reshape(next_states.shape[0], np.prod(next_states.shape[1:]))/255
+        # states = states.reshape(states.shape[0], np.prod(states.shape[1:]))/255
+        # next_states = next_states.reshape(next_states.shape[0], np.prod(next_states.shape[1:]))/255
+        
+        states = states/255
+        next_states = next_states/255
+        
         targets = rewards + Q_PARAMS['gamma']*(np.amax(self.model.predict_on_batch(next_states), axis=1))*(1-dones)
         targets_full = self.model.predict_on_batch(states)
         ind = np.array([i for i in range(TRAIN_PARAMS['batch_size'])])
@@ -123,7 +124,7 @@ class Agent:
 
 
     def qs(self, state):
-        state = state.reshape(1, np.prod(state.shape[:]))/255
+        state = state/255
         return np.argmax(self.model.predict(state))
         
 if __name__ == '__main__':
