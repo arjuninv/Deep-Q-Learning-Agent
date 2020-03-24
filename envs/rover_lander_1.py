@@ -65,9 +65,10 @@ class rover_lander_1(Env):
 
     def check_collision(self):
         if self.dis < 50 and self.rover.x in range(self.platform.x,self.platform.x + 30) and int(self.platform.y - self.rover.y) > 45:
-            self.quit()
             self.reward = 20
+            self.quit()
         elif self.rover.y + 50 > self.height:
+            print("oops")
             self.quit()
 
     

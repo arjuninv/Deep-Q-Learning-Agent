@@ -57,8 +57,8 @@ def update():
             temp = request.args[arg].replace("curr_time", str(datetime.datetime.now()))
             workers[int(id)][arg] = temp
             
-            if arg in ["acc", "loss", "mse"]:
-                Logger.get_logger(worker_name).log_scalar(arg, request.args[arg])
+            if arg in ["acc", "loss", "mse", "last_ep_score"]:
+                Logger.get_logger(worker_name).log_scalar(arg, float(request.args[arg]))
     workers[int(id)]["updated_at"] = datetime.datetime.now()
     return id
                 

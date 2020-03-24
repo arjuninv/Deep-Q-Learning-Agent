@@ -31,18 +31,22 @@ class Agent:
     
     
 if __name__ == '__main__':
-    import os
-    os.environ["SDL_VIDEODRIVER"] = "dummy"
+    # import os
+    # os.environ["SDL_VIDEODRIVER"] = "dummy"
     agent = Agent(model_path)
     env = rover_lander_1()
-    
+    reward = 0
     state = env.reset()
+    prev = agent.qs(state)
     while True:
         time.sleep(1/fps)
         env.render()
-        action = agent.qs(state)
+        if reward != 1:
+            prev = agent.qs(state)
+        action = prev
+
         state, reward, done = env.step(action)
-        # print(reward, done)
+        print(reward, done)
         if done:
             break
         

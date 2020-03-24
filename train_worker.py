@@ -72,7 +72,7 @@ class Agent:
     def __init__(self):
         self.replay_memory = deque(maxlen=REPLAY_MEMORY_SIZE)
         self.model = self.create_model()
-    
+        self.model_v = 0
     def create_model(self):
         model = Sequential([layers.Dense(150, input_dim=rover_lander_1.observation_space[0] * rover_lander_1.observation_space[1] * 3, activation=activations.relu),
                             layers.Dense(120, activation=activations.relu),
@@ -84,7 +84,8 @@ class Agent:
         self.model = tf.keras.models.load_model(model_path)
     
     def save_model(self, local_only=True):
-        self.model.save(f"models/{WORKER_NAME}.h5")
+        self.model.save(f"models/{WORKER_NAME}_v{self.model_v}.h5")
+        self.model_v = self.model_v + 1
         if not local_only:
             send_model(f"models/{WORKER_NAME}.h5")
     
