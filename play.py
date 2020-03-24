@@ -21,7 +21,7 @@ class Agent:
     def load_model(self, model_path):
         return tf.keras.models.load_model(model_path)
     
-    def qs(self, state):
+    def qs(self, state, rand=False):
         return np.argmax(self.model.predict(np.array(state)/255))[0]
     
     

@@ -37,6 +37,7 @@ class rover_lander_1(Env):
     def __init__(self):
         self.height = 300
         self.width = 400
+        self.observation_space = (self.width, self.height)
         self.done = False
         self.objects = []
         # Action Space
@@ -52,11 +53,9 @@ class rover_lander_1(Env):
         self.reward = False
         self.surface = pygame.display.get_surface()
 
-
-    def action_env(self):
-        return "int ; 0:do nothing, 1:thrust down, 2: thrust left, 3:thrust right"
+    # def action_env(self):
+    #     return "int ; 0:do nothing, 1:thrust down, 2: thrust left, 3:thrust right"
     
-
     def quit(self):
         self.done = True
 
@@ -73,11 +72,11 @@ class rover_lander_1(Env):
     def check_collision(self):
         self.dis = math.hypot(self.rover.x - self.platform.x, self.rover.y - self.platform.y)
         if self.dis < 50 and self.rover.x in range(self.platform.x,self.platform.x + 30) and int(self.platform.y - self.rover.y) > 45:
-            self.reset()
+            self.quit()
             self.score += 1
             self.reward = True
         elif self.rover.y + 50 > self.height:
-            self.reset()
+            self.quit()
 
     
     def user_mod(self):
@@ -124,13 +123,9 @@ class rover_lander_1(Env):
 
     def step(self, action):
         self.reward = False
-        if action == 'random':
-            self.action = random.randrange(0,4, 1)
-        else:
-            self.action = action
         self.platform.draw_self()
         self.rover.draw_self()
-        self.thrust(self.action)
+        self.thrust(action)
         pygame.time.wait(100)
         self.rover.y += 10
         self.check_collision()
@@ -138,12 +133,3 @@ class rover_lander_1(Env):
         pygame.display.flip()
         self.screen.fill((0, 0, 0))
         return (self.frame, self.reward, self.done)
-
-test = rover_lander_1()
-
-for _ in range(3):
-    print(test.step('random'))
-
-
-
-# test.user_mod()
