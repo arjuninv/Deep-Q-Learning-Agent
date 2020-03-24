@@ -27,26 +27,40 @@ class Agent:
     def qs(self, state):
         if self.testing:
             return (random.randint(0, 4) - 1)
-        return np.argmax(self.model.predict(np.array(state)/255))[0]
+        state = state.reshape(1, np.prod(state.shape[:]))/255
+        return np.argmax(self.model.predict(state))
     
     
 if __name__ == '__main__':
-    # import os
-    # os.environ["SDL_VIDEODRIVER"] = "dummy"
     agent = Agent(model_path)
     env = rover_lander_1()
-    reward = 0
     state = env.reset()
-    prev = agent.qs(state)
     while True:
         time.sleep(1/fps)
         env.render()
-        if reward != 1:
-            prev = agent.qs(state)
-        action = prev
-
+        action = agent.qs(state)
         state, reward, done = env.step(action)
-        print(reward, done)
+        print(action, reward, done)
         if done:
             break
+        
+# if __name__ == '__main__':
+#     # import os
+#     # os.environ["SDL_VIDEODRIVER"] = "dummy"
+#     agent = Agent(model_path)
+#     env = rover_lander_1()
+#     reward = 0
+#     state = env.reset()
+#     prev = agent.qs(state)
+#     while True:
+#         time.sleep(1/fps)
+#         env.render()
+#         if reward != 1:
+#             prev = agent.qs(state)
+#         action = prev
+
+#         state, reward, done = env.step(action)
+#         print(reward, done)
+#         if done:
+#             break
         
