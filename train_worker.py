@@ -122,8 +122,8 @@ class Agent:
         return np.argmax(self.model.predict(state))
         
 if __name__ == '__main__':
-    # if not SHOW_PREVIEW:
-    #     os.environ["SDL_VIDEODRIVER"] = "dummy"
+    if not SHOW_PREVIEW:
+        os.environ["SDL_VIDEODRIVER"] = "dummy"
         
     env = rover_lander_1()
     agent = Agent()
