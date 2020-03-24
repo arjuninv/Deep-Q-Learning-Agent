@@ -15,13 +15,17 @@ from envs.rover_lander_1 import rover_lander_1
 
 
 class Agent:
-    def __init__(self, model_path):
-        self.model = self.load_model(model_path)
+    def __init__(self, model_path, testing=False):
+        self.testing = testing
+        if not self.testing:
+            self.model = self.load_model(model_path)
     
     def load_model(self, model_path):
         return tf.keras.models.load_model(model_path)
     
-    def qs(self, state, rand=False):
+    def qs(self, state):
+        # if self.testing:
+        #     return 0 0r 1 or 2 or 3
         return np.argmax(self.model.predict(np.array(state)/255))[0]
     
     
