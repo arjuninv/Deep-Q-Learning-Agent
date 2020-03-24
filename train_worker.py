@@ -31,7 +31,7 @@ REPLAY_MEMORY_SIZE = args.mem_size
 
 RENDER_EVERY = 10
 SAVE_MODEL_EVERY = 500
-SAVE_MODEL_LOCAL_EVERY = 100
+SAVE_MODEL_LOCAL_EVERY = 20
 
 TRAIN_PARAMS = {'learning_rate':  args.lr,
                 'loss':  args.loss,
