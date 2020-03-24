@@ -1,7 +1,7 @@
-try:
-    from envs.core import Env
-except:
-    from core import Env
+# try:
+#     from envs.core import Env
+# except:
+#     from core import Env
 
 import pygame
 import math
@@ -31,7 +31,7 @@ class platform:
         pygame.draw.rect(self.screen, (255,255,255), self.platform, 1)
 
 
-class rover_lander_1(Env):
+class rover_lander_1():
     def __init__(self):
         self.height = 300
         self.width = 400
