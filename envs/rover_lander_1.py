@@ -79,23 +79,6 @@ class rover_lander_1(Env):
         elif self.rover.y + 50 > self.height:
             self.reset()
 
-    def random(self):
-        self.reward = False
-        self.action = random.randrange(0,4, 1)
-
-        # print(action)
-        self.platform.draw_self()
-        self.rover.draw_self()
-        self.thrust(self.action)
-        pygame.time.wait(100)
-        self.rover.y += 10
-        self.check_collision()
-        self.frame = np.frombuffer(self.surface.get_buffer(), dtype=dt)
-        pygame.display.flip()
-        self.screen.fill((0, 0, 0))
-        return (self.frame, self.reward, self.done)
-
-
     
     def user_mod(self):
         while not self.done:
@@ -141,9 +124,10 @@ class rover_lander_1(Env):
 
     def step(self, action):
         self.reward = False
-        # while not self.done:
-        self.action = action
-        # print(action)
+        if action == 'random':
+            self.action = random.randrange(0,4, 1)
+        else:
+            self.action = action
         self.platform.draw_self()
         self.rover.draw_self()
         self.thrust(self.action)
@@ -157,9 +141,9 @@ class rover_lander_1(Env):
 
 test = rover_lander_1()
 
-# for _ in range(3):
-#     print(test.random())
+for _ in range(3):
+    print(test.step('random'))
 
 
 
-test.user_mod()
+# test.user_mod()
