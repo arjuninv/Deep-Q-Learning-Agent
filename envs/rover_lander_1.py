@@ -46,9 +46,6 @@ class rover_lander_1(Env):
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.rover = rover(self.screen)
         self.platform = platform(self.screen)
-        self.score = 0
-        self.reward = False
-        self.last_dis = 500
 
     # def action_env(self):
     #     return "int ; 0:do nothing, 1:thrust down, 2: thrust left, 3:thrust right"
@@ -68,13 +65,13 @@ class rover_lander_1(Env):
 
     def check_collision(self):
         if self.dis < 50 and self.rover.x in range(self.platform.x,self.platform.x + 30) and int(self.platform.y - self.rover.y) > 45:
-            self.reset()
+            self.quit()
             self.score += 1
             # self.reward = True
             self.reward = 10
             return 
         elif self.rover.y + 50 > self.height:
-            self.reset()
+            self.quit()
 
     
     def user_mod(self):
@@ -114,9 +111,12 @@ class rover_lander_1(Env):
     def reset(self):
         del self.rover
         del self.platform
+        self.frame = pygame.surfarray.pixels3d(self.screen)
+        self.done = False
+        self.objects = []
+        self.screen = pygame.display.set_mode((self.width, self.height))
         self.rover = rover(self.screen)
         self.platform = platform(self.screen)
-        self.frame = pygame.surfarray.pixels3d(self.screen)
         return self.frame
 
     def observation(self):
