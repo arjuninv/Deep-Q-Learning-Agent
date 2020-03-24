@@ -135,7 +135,7 @@ class rover_lander_1(Env):
         elif self.cur in range(0,20):
             return 1
         else:
-            return 0
+            return -1
         # return (lst, self.cur)
 
     def step(self, action):
