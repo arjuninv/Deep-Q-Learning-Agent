@@ -48,6 +48,7 @@ class rover_lander_1(Env):
         self.platform = platform(self.screen)
         self.score = 0
         self.reward = False
+        self.last_dis = 500
 
     # def action_env(self):
     #     return "int ; 0:do nothing, 1:thrust down, 2: thrust left, 3:thrust right"
@@ -66,14 +67,14 @@ class rover_lander_1(Env):
             pass
 
     def check_collision(self):
-        self.dis = math.hypot(self.rover.x - self.platform.x, self.rover.y - self.platform.y)
         if self.dis < 50 and self.rover.x in range(self.platform.x,self.platform.x + 30) and int(self.platform.y - self.rover.y) > 45:
-            self.quit()
+            self.reset()
             self.score += 1
             # self.reward = True
             self.reward = 10
+            return 
         elif self.rover.y + 50 > self.height:
-            self.quit()
+            self.reset()
 
     
     def user_mod(self):
@@ -96,13 +97,16 @@ class rover_lander_1(Env):
                     elif event.key == pygame.K_q:
                         self.quit()
 
+            self.dis = math.hypot(self.rover.x - self.platform.x, self.rover.y - self.platform.y)
             pygame.time.wait(10)
             self.rover.y += 1
+            self.reward = self.compute_reward()
             self.check_collision()
             self.frame = pygame.surfarray.pixels3d(self.screen)
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
-            print (self.frame, self.reward, self.done)
+            # print (self.frame, self.reward, self.done)
+            print(self.reward)
 
     def save_frame(self):
         pass
@@ -122,14 +126,25 @@ class rover_lander_1(Env):
         pass
     
     def compute_reward(self):
-        print((self.rover.y / 290) * (1 / abs(self.rover.x - 190)) if self.rover.x == 190 else 1)
-        return (self.rover.y / 290) * (1 / abs(self.rover.x - 190)) if self.rover.x != 190 else 1
+        try:
+            lst = self.cur
+        except:
+            lst = abs(self.platform.x-self.rover.x)
+        self.cur = abs(self.platform.x-self.rover.x)
+        if lst > self.cur:
+            return 1
+        elif self.cur in range(0,20):
+            return 1
+        else:
+            return 0
+        # return (lst, self.cur)
 
     def step(self, action):
+        self.dis = math.hypot(self.rover.x - self.platform.x, self.rover.y - self.platform.y)
         self.platform.draw_self()
         self.rover.draw_self()
         self.thrust(action)
-        # pygame.time.wait(100)
+        pygame.time.wait(100)
         self.rover.y += 10
         self.reward = self.compute_reward()
         self.check_collision()
