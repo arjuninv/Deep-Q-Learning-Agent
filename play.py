@@ -44,7 +44,6 @@ if __name__ == '__main__':
         if reward != 1:
             prev = agent.qs(state)
         action = prev
-
         state, reward, done = env.step(action)
         print(reward, done)
         if done:
