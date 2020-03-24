@@ -6,11 +6,7 @@ except:
 import pygame
 import math
 import random
-import numpy as np
 
-dt = np.dtype(int)
-dt = dt.newbyteorder('>')
-pygame.init()
 
 class rover:
     def __init__(self, screen):
@@ -25,6 +21,7 @@ class rover:
 class platform:
     def __init__(self, screen):
         self.screen = screen
+        pygame.init()
         self.x = random.randrange(0,370, step=10)
         self.y = 290
     
@@ -51,7 +48,6 @@ class rover_lander_1(Env):
         self.platform = platform(self.screen)
         self.score = 0
         self.reward = False
-        self.surface = pygame.display.get_surface()
 
     # def action_env(self):
     #     return "int ; 0:do nothing, 1:thrust down, 2: thrust left, 3:thrust right"
@@ -102,7 +98,7 @@ class rover_lander_1(Env):
             pygame.time.wait(10)
             self.rover.y += 1
             self.check_collision()
-            self.frame = np.frombuffer(self.surface.get_buffer(), dtype=dt)
+            self.frame = pygame.surfarray.pixels3d(self.screen)
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
             print (self.frame, self.reward, self.done)
@@ -129,7 +125,7 @@ class rover_lander_1(Env):
         pygame.time.wait(100)
         self.rover.y += 10
         self.check_collision()
-        self.frame = np.frombuffer(self.surface.get_buffer(), dtype=dt)
+        self.frame = pygame.surfarray.pixels3d(self.screen)
         pygame.display.flip()
         self.screen.fill((0, 0, 0))
         return (self.frame, self.reward, self.done)
