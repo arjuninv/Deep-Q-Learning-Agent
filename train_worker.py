@@ -5,7 +5,7 @@ import datetime
 import requests
 from collections import deque
 import numpy as np
-import tqdm
+from tqdm.auto import tqdm
 
 import tensorflow as tf
 from keras import Sequential
@@ -13,16 +13,29 @@ from keras.layers import Dense
 from keras.optimizers import adam
 from keras.activations import relu, linear
 
-MASTER_ENDPOINT = "localhost:5000"
-WORKER_NAME = ""
-MAX_EPISODES = 5_000
-SHOW_PREVIEW = True
-AGGREGATE_STATS_EVERY = 10
-REPLAY_MEMORY_SIZE = 1000000
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--master-endpoint", help="Endpoint for train_master")
+parser.add_argument("--worker-name", help="Worker name")
+parser.add_argument("--show-preview", help="Show preview", action='store_true', default=False)
+parser.add_argument("--mem-size", help="Replay memory size", type=int, default=1000000)
+parser.add_argument("--max-ep", help="Maximum episodes", type=int, default=5000)
+parser.add_argument("--lr", help="Learning rate", type=float, default=0.001)
+parser.add_argument("--loss", help="Loss function", default="mse")
+args = parser.parse_args()
+
+MASTER_ENDPOINT = args.master_endpoint
+WORKER_NAME = args.worker_name
+MAX_EPISODES = args.max_ep
+SHOW_PREVIEW = args.show_preview
+REPLAY_MEMORY_SIZE = args.mem_size
+
+RENDER_EVERY = 10
 SAVE_MODEL_EVERY = 100
 SAVE_MODEL_LOCAL_EVERY = 10
 
-TRAIN_PARAMS = {'learning_rate': 0.001}
+TRAIN_PARAMS = {'learning_rate':  args.lr,
+                'loss':  args.loss}
 
 Q_PARAMS = {'epsilon': 1.0,
             'gamma': 0.99,
@@ -61,7 +74,7 @@ class Agent:
         model = Sequential([Dense(150, input_dim=rover_lander_1.observation_space, activation=relu),
                             Dense(120, activation=relu),
                             Dense(rover_lander_1.action_space, activation=linear)])
-        model.compile(loss='mse', optimizer=adam(lr=TRAIN_PARAMS['learning_rate']))
+        model.compile(loss=TRAIN_PARAMS['loss'], optimizer=adam(lr=TRAIN_PARAMS['learning_rate']))
         return model
     
     def load_model(self, model_path):
@@ -117,7 +130,7 @@ for episode in tqdm(range(0, MAX_EPISODES), ascii=True, unit='episodes'):
         else:
             action = env.random_action_sample()
             
-        if SHOW_PREVIEW and not episode % AGGREGATE_STATS_EVERY:
+        if SHOW_PREVIEW and not episode % RENDER_EVERY:
                 env.render()
 
         new_state, reward, done = env.step(action)

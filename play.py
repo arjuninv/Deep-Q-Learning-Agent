@@ -8,7 +8,7 @@ import random
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", help="Path to model to be used by the agent")
-parser.add_argument("--fps", help="Frames per second", type=int)
+parser.add_argument("--fps", help="Frames per second", type=int, default=20)
 args = parser.parse_args()
 
 model_path = args.model
