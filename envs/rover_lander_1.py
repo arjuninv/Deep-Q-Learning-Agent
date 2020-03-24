@@ -31,10 +31,11 @@ class platform:
 
 
 class rover_lander_1(Env):
+    height = 300
+    width = 400
+    observation_space = (width, height)
+    action_space = 4 # [0, 1, 2, 3]
     def __init__(self):
-        self.height = 300
-        self.width = 400
-        self.observation_space = (self.width, self.height)
         self.done = False
         self.objects = []
         # Action Space
@@ -42,7 +43,6 @@ class rover_lander_1(Env):
         #   1 - thruters left 
         #   2 - thruters down 
         #   3 - thruters right 
-        self.action_space = [0, 1, 2, 3]
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.rover = rover(self.screen)
         self.platform = platform(self.screen)
@@ -129,3 +129,6 @@ class rover_lander_1(Env):
         pygame.display.flip()
         self.screen.fill((0, 0, 0))
         return (self.frame, self.reward, self.done)
+    
+    def random_action_sample(self):
+        return (random.randint(0, 4) - 1) 

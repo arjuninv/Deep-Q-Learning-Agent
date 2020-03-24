@@ -58,9 +58,9 @@ class Agent:
         self.model = self.build_model()
     
     def create_model(self):
-        model = Sequential([Dense(150, input_dim=self.state_space, activation=relu),
+        model = Sequential([Dense(150, input_dim=rover_lander_1.observation_space, activation=relu),
                             Dense(120, activation=relu),
-                            Dense(self.action_space, activation=linear)])
+                            Dense(rover_lander_1.action_space, activation=linear)])
         model.compile(loss='mse', optimizer=adam(lr=TRAIN_PARAMS['learning_rate']))
         return model
     
