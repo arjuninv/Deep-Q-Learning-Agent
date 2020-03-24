@@ -11,7 +11,7 @@ import random
 class rover:
     def __init__(self, screen):
         self.screen = screen
-        self.x = 190
+        self.x = random.randrange(0,370, step=10)
         self.y = 0
     
     def draw_self(self):
@@ -70,14 +70,15 @@ class rover_lander_1(Env):
         if self.dis < 50 and self.rover.x in range(self.platform.x,self.platform.x + 30) and int(self.platform.y - self.rover.y) > 45:
             self.quit()
             self.score += 1
-            self.reward = True
+            # self.reward = True
+            self.reward = 10
         elif self.rover.y + 50 > self.height:
             self.quit()
 
     
     def user_mod(self):
         while not self.done:
-            self.reward = False
+            self.reward = 0
             self.platform.draw_self()
             self.rover.draw_self()
             for event in pygame.event.get():
@@ -103,8 +104,6 @@ class rover_lander_1(Env):
             self.screen.fill((0, 0, 0))
             print (self.frame, self.reward, self.done)
 
-
-    
     def save_frame(self):
         pass
     
@@ -113,17 +112,26 @@ class rover_lander_1(Env):
         del self.platform
         self.rover = rover(self.screen)
         self.platform = platform(self.screen)
+        self.frame = pygame.surfarray.pixels3d(self.screen)
+        return self.frame
 
     def observation(self):
         return (self.action, self.dis)
+    
+    def render(self):
+        pass
+    
+    def compute_reward(self):
+        print((self.rover.y / 290) * (1 / abs(self.rover.x - 190)) if self.rover.x == 190 else 1)
+        return (self.rover.y / 290) * (1 / abs(self.rover.x - 190)) if self.rover.x != 190 else 1
 
     def step(self, action):
-        self.reward = False
         self.platform.draw_self()
         self.rover.draw_self()
         self.thrust(action)
-        pygame.time.wait(100)
+        # pygame.time.wait(100)
         self.rover.y += 10
+        self.reward = self.compute_reward()
         self.check_collision()
         self.frame = pygame.surfarray.pixels3d(self.screen)
         pygame.display.flip()

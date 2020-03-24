@@ -4,6 +4,7 @@ import argparse
 import time
 import tensorflow as tf
 import numpy as np
+import random
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", help="Path to model to be used by the agent")
@@ -37,9 +38,9 @@ if __name__ == '__main__':
     while True:
         time.sleep(1/fps)
         env.render()
-        action = agent.get_qs(state)
+        action = agent.qs(state)
         state, reward, done = env.step(action)
-        
+        # print(reward, done)
         if done:
             break
         
