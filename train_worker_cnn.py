@@ -124,7 +124,7 @@ class Agent:
 
 
     def qs(self, state):
-        state = state/255
+        state = state.reshape(1, *state.shape)/255
         return np.argmax(self.model.predict(state))
         
 if __name__ == '__main__':
