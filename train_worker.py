@@ -68,7 +68,7 @@ class customCallback(tf.keras.callbacks.Callback):
 class Agent:
     def __init__(self):
         self.replay_memory = deque(maxlen=REPLAY_MEMORY_SIZE)
-        self.model = self.build_model()
+        self.model = self.create_model()
     
     def create_model(self):
         model = Sequential([Dense(150, input_dim=rover_lander_1.observation_space, activation=relu),
