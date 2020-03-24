@@ -64,6 +64,9 @@ class Agent:
         model.compile(loss='mse', optimizer=adam(lr=TRAIN_PARAMS['learning_rate']))
         return model
     
+    def load_model(self, model_path):
+        self.model = tf.keras.models.load_model(model_path)
+    
     def save_model(self, local_only=True):
         self.model.save(f"models/{WORKER_NAME}.h5")
         if not local_only:
@@ -110,13 +113,12 @@ for episode in tqdm(range(0, MAX_EPISODES), ascii=True, unit='episodes'):
     done = False
     while not done:
         if np.random.random() > agent.epsilon:
-            action = np.argmax(agent.get_qs(current_state))
+            action = agent.get_qs(current_state)
         else:
             action = env.random_action_sample()
             
         if SHOW_PREVIEW and not episode % AGGREGATE_STATS_EVERY:
                 env.render()
-        
 
         new_state, reward, done = env.step(action)
         episode_reward += reward
@@ -127,7 +129,7 @@ for episode in tqdm(range(0, MAX_EPISODES), ascii=True, unit='episodes'):
         step = step + 1
         
             
-        .append(episode_reward)
+    episode_rewards.append(episode_reward)
     update(("last_ep_score", episode_reward), 
            ("avg_ep_score", sum(episode_rewards) / len(episode_rewards)),
            ("num_step", step))

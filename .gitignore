@@ -6,3 +6,5 @@ __pycache__/
 
 # TensorBoard log files
 logs/
+
+models/

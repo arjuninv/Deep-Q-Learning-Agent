@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_ngrok import run_with_ngrok
 import datetime
 from tabulate import tabulate
 from _thread import *
@@ -10,6 +11,7 @@ import tensorflow as tf
 MODEL_DIR = "saved_models"
 CWD = os.getcwd()
 app = Flask(__name__)
+run_with_ngrok(app)
 
 workers = []
 
@@ -79,7 +81,7 @@ def send_file():
 
 
 def serve():
-    app.run(debug=True)
+    app.run()
     
     
 def mainloop():
