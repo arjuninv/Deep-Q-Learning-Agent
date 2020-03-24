@@ -31,6 +31,8 @@ class Agent:
     
     
 if __name__ == '__main__':
+    import os
+    os.environ["SDL_VIDEODRIVER"] = "dummy"
     agent = Agent(model_path)
     env = rover_lander_1()
     

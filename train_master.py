@@ -59,10 +59,11 @@ def update():
             
             if arg in ["acc", "loss", "mse"]:
                 Logger.get_logger(worker_name).log_scalar(arg, request.args[arg])
+    workers[int(id)]["updated_at"] = datetime.datetime.now()
     return id
                 
-@app.route('/master/send_file')
-def send_file():
+@app.route('/master/send_model', methods=['POST'])
+def send_model():
     global workers
     id = request.args['id']
     worker_name = workers[int(id)]["worker_name"]
