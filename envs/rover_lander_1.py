@@ -11,28 +11,28 @@ import random
 class rover:
     def __init__(self, screen):
         self.screen = screen
-        self.x = random.randrange(0,370, step=10)
+        self.x = random.randrange(0,45, step=10)
         self.y = 0
     
     def draw_self(self):
-        self.rover = pygame.Rect(int(self.x),int(self.y), 10, 50)
+        self.rover = pygame.Rect(int(self.x),int(self.y), 5, 5)
         pygame.draw.rect(self.screen, (255,255,255), self.rover, 0)
 
 class platform:
     def __init__(self, screen):
         self.screen = screen
         pygame.init()
-        self.x = random.randrange(0,370, step=10)
-        self.y = 290
+        self.x = random.randrange(0,35, step=1)
+        self.y = 45
     
     def draw_self(self):
-        self.platform = pygame.Rect(int(self.x), int(self.y),30, 10) 
+        self.platform = pygame.Rect(int(self.x), int(self.y),15, 5) 
         pygame.draw.rect(self.screen, (0, 217, 255), self.platform, 0)
 
 
 class rover_lander_1(Env):
-    height = 300
-    width = 400
+    height = 50
+    width = 50
     observation_space = (width, height)
     action_space = 4 # [0, 1, 2, 3]
     def __init__(self):
@@ -55,21 +55,22 @@ class rover_lander_1(Env):
 
     def thrust(self, dir):
         if dir == 1:
-            self.rover.y -= 1
+            self.rover.y -= 0.1
         elif dir == 2:
-            self.rover.x -= 10
+            if self.rover.x>0:
+                self.rover.x -= 1
         elif dir == 3:
-            self.rover.x += 10
+            if self.rover.x<45:
+                self.rover.x += 1
         elif dir == 0:
             pass
 
     def check_collision(self):
-        # print(self.rover.x, self.platform.x,self.platform.y - self.rover.y)
-        if self.dis < 50 and self.rover.x in range(self.platform.x,self.platform.x + 31) and int(self.platform.y - self.rover.y) < 45:
+        if self.dis < 11 and self.rover.x in range(self.platform.x,self.platform.x + 11) and int(self.platform.y - self.rover.y) < 5:
             self.reward = 20
             self.quit()
-        elif self.rover.y + 50 > self.height:
-            print("oops")
+        elif self.rover.y + 5 > self.height:
+            # print("oops")
             self.quit()
 
     
@@ -87,14 +88,14 @@ class rover_lander_1(Env):
                     elif event.key == pygame.K_a:
                         self.thrust(2)
                     elif event.key == pygame.K_w:
-                        self.rover.y -= 10
+                        self.rover.y -= 1
                     elif event.key == pygame.K_s:
                         self.thrust(0)
                     elif event.key == pygame.K_q:
                         self.quit()
 
             self.dis = math.hypot(self.rover.x - self.platform.x, self.rover.y - self.platform.y)
-            pygame.time.wait(10)
+            pygame.time.wait(100)
             self.rover.y += 1
             self.reward = self.compute_reward()
             self.check_collision()
@@ -102,7 +103,7 @@ class rover_lander_1(Env):
             pygame.display.flip()
             self.screen.fill((0, 0, 0))
             # print (self.frame, self.reward, self.done)
-            # print(self.reward)
+            print(self.reward)
 
     def save_frame(self):
         pass
@@ -132,7 +133,7 @@ class rover_lander_1(Env):
         self.cur = abs(self.platform.x-self.rover.x)
         if lst > self.cur:
             return 1
-        elif self.cur in range(0,20):
+        elif self.cur in range(0,11) and self.platform.x-self.rover.x <= 0:
             return 1
         else:
             return -1
@@ -143,8 +144,8 @@ class rover_lander_1(Env):
         self.platform.draw_self()
         self.rover.draw_self()
         self.thrust(action)
-        pygame.time.wait(10)
-        self.rover.y += 10
+        # pygame.time.wait(100)
+        self.rover.y += 1
         self.reward = self.compute_reward()
         self.check_collision()
         self.frame = pygame.surfarray.array3d(self.screen)
