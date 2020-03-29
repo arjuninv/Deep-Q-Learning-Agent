@@ -46,5 +46,5 @@ python play.py --model <MODEL_PATH>
 ```
 When using a CNN based model, run: 
 ```
-python play_cnn.python --model <MODEL_PATH> 
+python play_cnn.py --model <MODEL_PATH> 
 ```
