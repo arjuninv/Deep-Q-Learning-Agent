@@ -27,7 +27,7 @@ class Agent:
     def qs(self, state):
         if self.testing:
             return (random.randint(0, 4) - 1)
-        state = state.reshape(1, np.prod(state.shape[:]))/255
+        state = state.reshape(1, *state.shape)/255
         return np.argmax(self.model.predict(state))
     
     
