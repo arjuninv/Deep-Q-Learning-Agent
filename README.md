@@ -25,14 +25,14 @@ tensorboard --logdir logs
 
 Now, on each remote workstation run:
 ```
-!python train_worker.py \
+python train_worker.py \
                         --master-endpoint <MASTER_ENDPOINT> \
                         --worker-name <WORKER_NAME> \
 ```
 
 To train using the CNN based model run:
 ```
-!python train_worker_cnn.py \
+python train_worker_cnn.py \
                         --master-endpoint <MASTER_ENDPOINT> \
                         --worker-name <WORKER_NAME> \
 ```
