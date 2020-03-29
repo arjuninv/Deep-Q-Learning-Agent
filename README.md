@@ -14,7 +14,7 @@ First, on your local machine run:
 python train_master.py
 ```
 
-| Note: Use a port-forwarding tool like [ngrok](https://ngrok.com/) to expose your the endpoint created
+| Note: Use a port-forwarding tool like [ngrok](https://ngrok.com/) to expose the endpoint created
 
 To moniter performance of all remote workers from local machine, run:
 ```
