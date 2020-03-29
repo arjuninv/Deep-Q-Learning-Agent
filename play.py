@@ -5,6 +5,7 @@ import time
 import tensorflow as tf
 import numpy as np
 import random
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", help="Path to model to be used by the agent")
@@ -33,8 +34,8 @@ class Agent:
     
 if __name__ == '__main__':
     agent = Agent(model_path)
-    env = rover_lander_1()
-    for i in range(10):
+    env = rover_lander_1(save_gif=True, filename=os.path.basename(model_path).replace(".h5", ""))
+    for i in range(5):
         state = env.reset()
         while True:
             time.sleep(1/fps)
@@ -44,24 +45,4 @@ if __name__ == '__main__':
             print(action, reward, done)
             if done:
                 break
-        
-# if __name__ == '__main__':
-#     # import os
-#     # os.environ["SDL_VIDEODRIVER"] = "dummy"
-#     agent = Agent(model_path)
-#     env = rover_lander_1()
-#     reward = 0
-#     state = env.reset()
-#     prev = agent.qs(state)
-#     while True:
-#         time.sleep(1/fps)
-#         env.render()
-#         if reward != 1:
-#             prev = agent.qs(state)
-#         action = prev
-
-#         state, reward, done = env.step(action)
-#         print(reward, done)
-#         if done:
-#             break
-        
+    env.export_gif()

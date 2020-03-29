@@ -2,10 +2,12 @@ try:
     from envs.core import Env
 except:
     from core import Env
-
+import os
 import pygame
 import math
 import random
+import numpy as np
+from array2gif import write_gif
 
 
 class rover:
@@ -35,7 +37,13 @@ class rover_lander_1(Env):
     width = 50
     observation_space = (width, height)
     action_space = 4 # [0, 1, 2, 3]
-    def __init__(self):
+    def __init__(self, save_gif=False, filename="gameplay"):
+        self.filename = filename
+        self.save_gif = save_gif
+        if save_gif:
+            if not os.path.exists("gameplay"):
+                os.makedirs("gameplay")
+        self.frame_buffer = []
         self.done = False
         self.objects = []
         # Action Space
@@ -105,8 +113,15 @@ class rover_lander_1(Env):
             # print (self.frame, self.reward, self.done)
             print(self.reward)
 
-    def save_frame(self):
-        pass
+    def export_gif(self):
+        if self.save_gif:
+            n = 1
+            saved = os.listdir(f"gameplay")
+            while (f'{self.filename}_{n}.gif' in saved):
+                n = n+1
+            write_gif(self.frame_buffer, f'gameplay/{self.filename}_{n}.gif', fps=25)
+            print(f"saved with {len(self.frame_buffer)} frames")
+            self.frame_buffer = []
     
     def reset(self):
         del self.rover
@@ -122,9 +137,10 @@ class rover_lander_1(Env):
     def observation(self):
         return (self.action, self.dis)
     
-    def render(self):
-        pass
     
+    def render(self):
+        if self.save_gif:
+            self.frame_buffer.append(np.array(self.frame))    
     def compute_reward(self):
         try:
             lst = self.cur
