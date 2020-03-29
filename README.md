@@ -7,7 +7,7 @@ This project demonstrates the generalizability of “Deep Q-Learning” by learn
 | FCNN  | [Open TensorBoard](https://tensorboard.dev/experiment/HY1DEpDnRoOhkmVAkebOnQ/#scalars&_smoothingWeight=0.96&runSelectionState=eyJjb2xhYi13b3JrZXItMS9zY2FsYXJzLzIwMjAwMzI5LTEzMDcyMi9tZXRyaWNzIjp0cnVlLCJjb2xhYi13b3JrZXItY25uLTEvc2NhbGFycy8yMDIwMDMyOS0xMzA3MjMvbWV0cmljcyI6ZmFsc2V9) | <img src="https://github.com/ArjunInventor/Deep-Q-Learning-Agent/blob/master/gameplay/colab-worker-1_v0_1.gif?raw=true" width="150" height="150">     | <img src="https://github.com/ArjunInventor/Deep-Q-Learning-Agent/blob/master/gameplay/colab-worker-1_v10_1.gif?raw=true" width="150" height="150">     |
 | CNN   | [Open TensorBoard](https://tensorboard.dev/experiment/HY1DEpDnRoOhkmVAkebOnQ/#scalars&_smoothingWeight=0.96&runSelectionState=eyJjb2xhYi13b3JrZXItMS9zY2FsYXJzLzIwMjAwMzI5LTEzMDcyMi9tZXRyaWNzIjpmYWxzZSwiY29sYWItd29ya2VyLWNubi0xL3NjYWxhcnMvMjAyMDAzMjktMTMwNzIzL21ldHJpY3MiOnRydWV9) | <img src="https://github.com/ArjunInventor/Deep-Q-Learning-Agent/blob/master/gameplay/colab-worker-cnn-1_v0_1.gif?raw=true" width="150" height="150"> | <img src="https://github.com/ArjunInventor/Deep-Q-Learning-Agent/blob/master/gameplay/colab-worker-cnn-1_v10_1.gif?raw=true" width="150" height="150"> |
 
-## Train
+## Training model
 ### Local
 First, on your local machine run:
 ```
@@ -40,11 +40,11 @@ To train using the CNN based model run:
 Or, run remote worker from Google Colab - https://colab.research.google.com/github/ArjunInventor/Deep-Q-Learning-Agent/blob/master/train_worker.ipynb
 
 
-## Test agent
+## Testing agent
 ```
 python play.py --model <MODEL_PATH> 
 ```
 When using a CNN based model, run: 
 ```
-python play_cnn.python--model <MODEL_PATH> 
+python play_cnn.python --model <MODEL_PATH> 
 ```
