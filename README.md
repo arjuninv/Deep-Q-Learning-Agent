@@ -16,7 +16,7 @@ python train_master.py
 
 | Note: Use a port-forwarding tool like [ngrok](https://ngrok.com/) to expose the endpoint created
 
-To moniter performance of all remote workers from local machine, run:
+To moniter logs streamed from remote workers on your local machine, run:
 ```
 tensorboard --logdir logs
 ```
