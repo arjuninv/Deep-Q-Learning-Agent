@@ -21,7 +21,7 @@ First, on your local machine run:
 python train_master.py
 ```
 
-| Note: Use a port-forwarding tool like [ngrok](https://ngrok.com/) to expose the endpoint created
+> Note: Use a port-forwarding tool like [ngrok](https://ngrok.com/) to expose the endpoint created
 
 To moniter logs streamed from remote workers on your local machine, run:
 ```
@@ -33,15 +33,17 @@ tensorboard --logdir logs
 Now, on each remote workstation run:
 ```
 python train_worker.py \
+                        --env <ENV_NAME> \
                         --master-endpoint <MASTER_ENDPOINT> \
-                        --worker-name <WORKER_NAME> \
+                        --worker-name <WORKER_NAME>
 ```
 
 To train using the CNN based model run:
 ```
 python train_worker_cnn.py \
+                        --env <ENV_NAME> \
                         --master-endpoint <MASTER_ENDPOINT> \
-                        --worker-name <WORKER_NAME> \
+                        --worker-name <WORKER_NAME>
 ```
 
 Or, run remote worker from Google Colab - https://colab.research.google.com/github/ArjunInventor/Deep-Q-Learning-Agent/blob/master/train_worker.ipynb
@@ -49,9 +51,10 @@ Or, run remote worker from Google Colab - https://colab.research.google.com/gith
 
 ## Testing agent
 ```
-python play.py --model <MODEL_PATH> 
+python play.py --model <MODEL_PATH> --env <ENV_NAME>
 ```
 When using a CNN based model, run: 
 ```
-python play_cnn.py --model <MODEL_PATH> 
+python play_cnn.py --model <MODEL_PATH> --env <ENV_NAME>
 ```
+> Use ```--save-gif``` to save the gameplay as a gif 
