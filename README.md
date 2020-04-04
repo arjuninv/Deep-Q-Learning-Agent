@@ -58,3 +58,8 @@ When using a CNN based model, run:
 python play_cnn.py --model <MODEL_PATH> --env <ENV_NAME>
 ```
 > Use ```--save-gif``` to save the gameplay as a gif 
+
+
+## Project Report
+
+This project is in completion of INT404 assignment and the final report can be found [here](https://github.com/lawRathod/Deep-Q-Learning-Agent/blob/master/Final%20Report%20-%20AI%20Project.pdf).
