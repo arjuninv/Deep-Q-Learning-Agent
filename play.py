@@ -1,4 +1,5 @@
 from envs.rover_lander_1 import rover_lander_1
+from envs.rover_lander_2 import rover_lander_2
 
 import argparse
 import time
@@ -10,6 +11,9 @@ import os
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", help="Path to model to be used by the agent")
 parser.add_argument("--fps", help="Frames per second", type=int, default=20)
+parser.add_argument("--env", help="Env name")
+parser.add_argument("--save-gif", help="Save gif", action='store_true', default=False)
+
 args = parser.parse_args()
 
 model_path = args.model
@@ -34,7 +38,11 @@ class Agent:
     
 if __name__ == '__main__':
     agent = Agent(model_path)
-    env = rover_lander_1(save_gif=True, filename=os.path.basename(model_path).replace(".h5", ""))
+    if args.env == 'rover_lander_1':
+        env = rover_lander_1(save_gif=args.save_gif, filename=os.path.basename(model_path).replace(".h5", ""))
+    elif args.env == 'rover_lander_2':
+        env = rover_lander_2(save_gif=args.save_gif, filename=os.path.basename(model_path).replace(".h5", ""))
+        
     for i in range(5):
         state = env.reset()
         while True:

@@ -1,4 +1,5 @@
 from envs.rover_lander_1 import rover_lander_1
+from envs.rover_lander_2 import rover_lander_2
 import os
 import random
 import datetime
@@ -14,6 +15,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--master-endpoint", help="Endpoint for train_master")
 parser.add_argument("--worker-name", help="Worker name")
+parser.add_argument("--env", help="Env name")
 parser.add_argument("--show-preview", help="Show preview", action='store_true', default=False)
 parser.add_argument("--mem-size", help="Replay memory size", type=int, default=1000000)
 parser.add_argument("--max-ep", help="Maximum episodes", type=int, default=5000)
@@ -48,7 +50,7 @@ id = None
 
 def connect():
     global id
-    id = int(requests.get(MASTER_ENDPOINT + f"/master/connect?worker_name={WORKER_NAME}&max_episodes={MAX_EPISODES}&current_episode=0").text)
+    id = int(requests.get(MASTER_ENDPOINT + f"/master/connect?worker_name={WORKER_NAME}&env={args.env}&max_episodes={MAX_EPISODES}&current_episode=0").text)
     
 def update(properties=[]):
     global id
@@ -131,7 +133,11 @@ if __name__ == '__main__':
     if not SHOW_PREVIEW:
         os.environ["SDL_VIDEODRIVER"] = "dummy"
         
-    env = rover_lander_1()
+    if args.env == 'rover_lander_1':
+        env = rover_lander_1()
+    elif args.env == 'rover_lander_2':
+        env = rover_lander_2()
+        
     agent = Agent()
     connect()
     episode_rewards = []
